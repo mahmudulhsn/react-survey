@@ -3,11 +3,13 @@ import router from "./router";
 
 const axiosClient = axios.create({
   baseURL: `${import.meta.env.VITE_API_BASE_URL}/api`,
+  headers: { "Access-Control-Allow-Credentials": true },
 });
 
 axiosClient.interceptors.request.use((config) => {
   const token = "123"; //TODO
   config.headers.Authorization = `Bearer ${token}`;
+  return config;
 });
 
 axiosClient.interceptors.response.use(

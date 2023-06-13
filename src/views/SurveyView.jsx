@@ -3,7 +3,7 @@ import { LinkIcon, PhotoIcon, TrashIcon } from "@heroicons/react/24/outline";
 import TButton from "../components/core/TButton";
 import { useState } from "react";
 
-const CreateSurvey = () => {
+const SurveyView = () => {
   const [survey, setSurvey] = useState({
     title: "",
     slug: "",
@@ -162,4 +162,4 @@ const CreateSurvey = () => {
   );
 };
 
-export default CreateSurvey;
+export default SurveyView;
