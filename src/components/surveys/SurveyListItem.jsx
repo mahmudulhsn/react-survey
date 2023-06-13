@@ -1,6 +1,6 @@
 import {
-  PencilIcon,
   ArrowTopRightOnSquareIcon,
+  PencilIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import TButton from "../core/TButton";
