@@ -1,11 +1,51 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useStateContext } from "../contexts/ContextProvider";
+import axiosClient from "../axios";
+
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [validationError, setValidationError] = useState({});
+
+  const { setCurrentUser, setUserToken } = useStateContext();
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+
+    axiosClient
+      .post("/login", {
+        email,
+        password,
+      })
+      .then(({ data }) => {
+        setCurrentUser(data.user);
+        setUserToken(data.token);
+        setValidationError({});
+      })
+      .catch((error) => {
+        if (error.response.status === 422) {
+          setValidationError(error.response.data.errors);
+
+          // console.log(validationError);
+        } else {
+          console.log(error);
+        }
+      });
+  };
+
   return (
     <>
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="mt-10 mb-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Sign in to your account
         </h2>
-        <form className="space-y-6" action="#" method="POST">
+        <form
+          onSubmit={onSubmit}
+          className="space-y-6"
+          action="#"
+          method="POST"
+        >
           <div>
             <label
               htmlFor="email"
@@ -18,11 +58,13 @@ export default function Login() {
                 id="email"
                 name="email"
                 type="email"
-                autoComplete="email"
-                required
+                onChange={(event) => setEmail(event.target.value)}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
+            {/* {validationError["email"] !== undefined && (
+              <span className="text-red-600">{validationError["email"]}</span>
+            )} */}
           </div>
 
           <div>
@@ -33,25 +75,21 @@ export default function Login() {
               >
                 Password
               </label>
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-semibold text-indigo-600 hover:text-indigo-500"
-                >
-                  Forgot password?
-                </a>
-              </div>
             </div>
             <div className="mt-2">
               <input
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="current-password"
-                required
+                onChange={(event) => setPassword(event.target.value)}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
+            {/* {validationError["password"] && (
+              <span className="text-red-600">
+                {validationError["password"]}
+              </span>
+            )} */}
           </div>
 
           <div>
@@ -66,12 +104,12 @@ export default function Login() {
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Not a member?{" "}
-          <a
-            href="#"
+          <Link
+            to="/signup"
             className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
           >
-            Start a 14 day free trial
-          </a>
+            Create account for free.
+          </Link>
         </p>
       </div>
     </>
