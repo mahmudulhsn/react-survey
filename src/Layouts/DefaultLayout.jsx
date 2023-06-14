@@ -8,6 +8,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { NavLink, Navigate, Outlet } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
+import axiosClient from "../axios";
 
 const navigation = [
   { name: "Dashboard", to: "/", current: true },
@@ -19,11 +20,18 @@ function classNames(...classes) {
 }
 
 export default function DefaultLayout() {
-  const { currentUser, userToken } = useStateContext();
+  const { currentUser, userToken, setCurrentUser, setUserToken } =
+    useStateContext();
 
   function logout(event) {
     event.preventDefault();
-    console.log("Logout");
+    axiosClient
+      .post("logout")
+      .then((response) => {
+        setCurrentUser({});
+        setUserToken(null);
+      })
+      .catch((error) => console.log(error));
   }
 
   if (!userToken) {
