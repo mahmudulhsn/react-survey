@@ -2,8 +2,11 @@ import PageComponent from "../components/PageComponent";
 import { LinkIcon, PhotoIcon, TrashIcon } from "@heroicons/react/24/outline";
 import TButton from "../components/core/TButton";
 import { useState } from "react";
+import axiosClient from "../axios";
+import { useNavigate } from "react-router-dom";
 
 const SurveyView = () => {
+  const navigate = useNavigate();
   const [survey, setSurvey] = useState({
     title: "",
     slug: "",
@@ -15,12 +18,40 @@ const SurveyView = () => {
     questions: [],
   });
 
+  const [error, setError] = useState("");
+
   const onImageChoose = (ev) => {
     const file = ev.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      setSurvey({ ...survey, image: file, image_url: reader.result });
+      ev.target.value = "";
+    };
+    reader.readAsDataURL(file);
   };
 
   const onSubmit = (ev) => {
     ev.preventDefault();
+    const payload = { ...survey };
+
+    if (payload.image) {
+      payload.image = payload.image_url;
+    }
+
+    delete payload.image_url;
+
+    axiosClient
+      .post("/surveys", payload)
+      .then((response) => {
+        console.log(response);
+        navigate("/surveys");
+      })
+      .catch((err) => {
+        if (err && err.response) {
+          setError(err.response.data.errors);
+        }
+        console.log(err, err.response);
+      });
   };
 
   return (
@@ -28,6 +59,9 @@ const SurveyView = () => {
       <form action="#" method="POST" onSubmit={onSubmit}>
         <div className="shadow sm:overflow-hidden sm:rounded-md">
           <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+            {/* {error && (
+              <div className="bg-red-500 text-white py-3 px-3">{error}</div>
+            )} */}
             {/*Image*/}
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -58,6 +92,9 @@ const SurveyView = () => {
                   Change
                 </button>
               </div>
+              {error["image"] !== undefined && (
+                <small className="text-red-600">{error["image"]}</small>
+              )}
             </div>
             {/*Image*/}
 
@@ -80,6 +117,9 @@ const SurveyView = () => {
                 placeholder="Survey Title"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               />
+              {error["title"] !== undefined && (
+                <small className="text-red-600">{error["title"]}</small>
+              )}
             </div>
             {/*Title*/}
 
@@ -102,6 +142,9 @@ const SurveyView = () => {
                 placeholder="Describe your survey"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               ></textarea>
+              {error["description"] !== undefined && (
+                <small className="text-red-600">{error["description"]}</small>
+              )}
             </div>
             {/*Description*/}
 
@@ -123,6 +166,9 @@ const SurveyView = () => {
                 }
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               />
+              {error["expire_date"] !== undefined && (
+                <small className="text-red-600">{error["expire_date"]}</small>
+              )}
             </div>
             {/*Expire Date*/}
 
@@ -139,6 +185,9 @@ const SurveyView = () => {
                   }
                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                 />
+                {error["status"] !== undefined && (
+                  <small className="text-red-600">{error["status"]}</small>
+                )}
               </div>
               <div className="ml-3 text-sm">
                 <label htmlFor="comments" className="font-medium text-gray-700">
