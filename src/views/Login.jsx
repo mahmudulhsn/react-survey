@@ -6,7 +6,7 @@ import axiosClient from "../axios";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [validationError, setValidationError] = useState({});
+  const [error, setError] = useState({});
 
   const { setCurrentUser, setUserToken } = useStateContext();
 
@@ -21,15 +21,14 @@ export default function Login() {
       .then(({ data }) => {
         setCurrentUser(data.user);
         setUserToken(data.token);
-        setValidationError({});
+        setError({});
       })
-      .catch((error) => {
-        if (error.response.status === 422) {
-          setValidationError(error.response.data.errors);
-
-          // console.log(validationError);
-        } else {
+      .catch((err) => {
+        if (err.response.status === 422) {
+          setError(err.response.data.errors);
           console.log(error);
+        } else {
+          console.log(err);
         }
       });
   };
@@ -46,6 +45,9 @@ export default function Login() {
           action="#"
           method="POST"
         >
+          {error["notMatch"] !== undefined && (
+            <div className=" text-red-500 px-3">{error["notMatch"]}</div>
+          )}
           <div>
             <label
               htmlFor="email"
@@ -62,9 +64,9 @@ export default function Login() {
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
-            {/* {validationError["email"] !== undefined && (
-              <span className="text-red-600">{validationError["email"]}</span>
-            )} */}
+            {error["email"] !== undefined && (
+              <span className="text-red-600">{error["email"]}</span>
+            )}
           </div>
 
           <div>
@@ -85,11 +87,9 @@ export default function Login() {
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
-            {/* {validationError["password"] && (
-              <span className="text-red-600">
-                {validationError["password"]}
-              </span>
-            )} */}
+            {error["password"] && (
+              <span className="text-red-600">{error["password"]}</span>
+            )}
           </div>
 
           <div>
