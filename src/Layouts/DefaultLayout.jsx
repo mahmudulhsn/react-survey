@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -33,6 +33,15 @@ export default function DefaultLayout() {
       })
       .catch((error) => console.log(error));
   }
+
+  useEffect(() => {
+    axiosClient
+      .get("/me")
+      .then(({ data }) => {
+        setCurrentUser(data.user);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   if (!userToken) {
     return <Navigate to="/login" />;
