@@ -32,8 +32,8 @@ const SurveyQuestions = ({ survey, onSurveyUpdate }) => {
     setModel({ ...model, questions: newQuestions });
   };
 
-  const deleteQuestion = () => {
-    const newQuestions = model.questions.filter((q) => q.id == question.id);
+  const deleteQuestion = (question) => {
+    const newQuestions = model.questions.filter((q) => q.id !== question.id);
     setModel({ ...model, questions: newQuestions });
   };
 
@@ -45,13 +45,14 @@ const SurveyQuestions = ({ survey, onSurveyUpdate }) => {
     <>
       <div className="flex justify-between">
         <h3 className="text-2xl font-bold">Questions</h3>
-        <span
+        <button
           className="flex items-center text-sm py-1 rounded-sm text-white bg-gray-600 px-2 hover:bg-gray-700 cursor-pointer"
           onClick={addQuestion}
+          type="button"
         >
           <PlusIcon className="w-4 mr-2" />
           Add Question
-        </span>
+        </button>
       </div>
       {model.questions.length ? (
         model.questions.map((q, ind) => (

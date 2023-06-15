@@ -205,7 +205,7 @@ const SurveyView = () => {
             </div>
             {/*Active*/}
 
-            {/* <button type="button">Add question</button> */}
+            <button type="button">Add question</button>
 
             <SurveyQuestions survey={survey} onSurveyUpdate={onSurveyUpdate} />
           </div>
