@@ -1,9 +1,10 @@
-import PageComponent from "../components/PageComponent";
-import { LinkIcon, PhotoIcon, TrashIcon } from "@heroicons/react/24/outline";
-import TButton from "../components/core/TButton";
+import { PhotoIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import axiosClient from "../axios";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import axiosClient from "../axios";
+import PageComponent from "../components/PageComponent";
+import TButton from "../components/core/TButton";
 import SurveyQuestions from "../components/surveys/SurveyQuestions";
 
 const SurveyView = () => {
@@ -31,6 +32,19 @@ const SurveyView = () => {
     reader.readAsDataURL(file);
   };
 
+  const addQuestion = () => {
+    survey.questions.push({
+      id: uuidv4(),
+      type: "text",
+      question: "",
+      description: "",
+      data: {},
+    });
+    setSurvey({ ...survey });
+  };
+
+  const onDelete = () => {};
+
   const onSubmit = (ev) => {
     ev.preventDefault();
     const payload = { ...survey };
@@ -55,8 +69,11 @@ const SurveyView = () => {
       });
   };
 
-  function onSurveyUpdate(survey) {
-    setSurvey({ ...survey });
+  function onQuestionsUpdate(questions) {
+    setSurvey({
+      ...survey,
+      questions,
+    });
   }
 
   return (
@@ -205,9 +222,13 @@ const SurveyView = () => {
             </div>
             {/*Active*/}
 
-            <button type="button">Add question</button>
-
-            <SurveyQuestions survey={survey} onSurveyUpdate={onSurveyUpdate} />
+            <button type="button" onClick={addQuestion}>
+              Add question
+            </button>
+            <SurveyQuestions
+              questions={survey.questions}
+              onQuestionsUpdate={onQuestionsUpdate}
+            />
           </div>
           <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
             <TButton>Save</TButton>
