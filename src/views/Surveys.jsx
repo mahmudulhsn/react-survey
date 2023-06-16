@@ -44,7 +44,7 @@ const Surveys = () => {
         </TButton>
       }
     >
-      {loading && <div className="text-center">Loading...</div>}
+      {loading && <div className="text-center text-lg">Loading...</div>}
 
       {!loading && (
         <div>
