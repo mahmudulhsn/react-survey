@@ -11,23 +11,28 @@ const Surveys = () => {
   // const { surveys } = useStateContext();
   const [surveys, setSurveys] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [meta, setMeta] = useState({});
 
   const onDeleteClick = () => {
     console.log("onDeleteClick");
   };
 
-  useEffect(() => {
+  const onPageClick = (link) => {
+    getSurveys(link.url);
+  };
+
+  const getSurveys = (url) => {
+    url = url || "/surveys";
     setLoading(true);
-    axiosClient
-      .get("/surveys")
-      .then(({ data }) => {
-        setSurveys(data.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
+    axiosClient.get(url).then(({ data }) => {
+      setSurveys(data.data);
+      setMeta(data.meta);
+      setLoading(false);
+    });
+  };
+
+  useEffect(() => {
+    getSurveys();
   }, []);
 
   return (
@@ -52,7 +57,9 @@ const Surveys = () => {
               />
             ))}
           </div>
-          <Pagination />
+          {surveys.length > 0 && (
+            <Pagination meta={meta} onPageClick={onPageClick} />
+          )}
         </div>
       )}
     </PageComponent>
