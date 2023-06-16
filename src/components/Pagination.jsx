@@ -50,10 +50,8 @@ export default function Pagination({ meta, onPageClick }) {
                     aria-current="page"
                     className={
                       "relative z-10 inline-flex items-center border px-4 py-2 text-sm font-medium focus:z-20 " +
-                      (ind === 0 ? "rounded-l-md cursor-not-allowed " : "") +
-                      (ind === meta.links.length - 1
-                        ? "rounded-r-md cursor-not-allowed "
-                        : "") +
+                      (ind === 0 ? "rounded-l-md " : "") +
+                      (ind === meta.links.length - 1 ? "rounded-r-md " : "") +
                       (link.active
                         ? "border-indigo-700 bg-indigo-700 text-white "
                         : "") +
