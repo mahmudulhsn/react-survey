@@ -56,10 +56,8 @@ const SurveyView = () => {
     }
 
     delete payload.image_url;
-
-    axiosClient
-      .post("/surveys", payload)
-      .then((response) => {
+    const res = id == undefined ? axiosClient.post("/surveys", payload) : axiosClient.put(`/surveys/${id}`, payload);
+      res.then((response) => {
         console.log(response);
         navigate("/surveys");
       })
