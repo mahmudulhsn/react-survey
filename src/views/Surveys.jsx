@@ -8,7 +8,7 @@ import axiosClient from "../axios";
 import Pagination from "../components/Pagination";
 
 const Surveys = () => {
-  // const { surveys } = useStateContext();
+  const { showToast } = useStateContext();
   const [surveys, setSurveys] = useState([]);
   const [loading, setLoading] = useState(false);
   const [meta, setMeta] = useState({});
@@ -19,6 +19,7 @@ const Surveys = () => {
         .delete(`/surveys/${id}`)
         .then((res) => {
           getSurveys();
+          showToast("You have successfully deleted the survey.");
         })
         .catch((err) => console.log(err));
     }
@@ -55,6 +56,11 @@ const Surveys = () => {
 
       {!loading && (
         <div>
+          {surveys.length === 0 && (
+            <div className="py-8 text-center text-gray-700">
+              You don't have surveys created.
+            </div>
+          )}
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
             {surveys.map((survey) => (
               <SurveyListItem

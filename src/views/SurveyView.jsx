@@ -6,8 +6,10 @@ import axiosClient from "../axios";
 import PageComponent from "../components/PageComponent";
 import TButton from "../components/core/TButton";
 import SurveyQuestions from "../components/surveys/SurveyQuestions";
+import { useStateContext } from "../contexts/ContextProvider";
 
 const SurveyView = () => {
+  const { showToast } = useStateContext();
   const navigate = useNavigate();
   const { id } = useParams();
   const [survey, setSurvey] = useState({
@@ -45,8 +47,6 @@ const SurveyView = () => {
     setSurvey({ ...survey });
   };
 
-  const onDelete = () => {};
-
   const onSubmit = (ev) => {
     ev.preventDefault();
     const payload = { ...survey };
@@ -56,10 +56,19 @@ const SurveyView = () => {
     }
 
     delete payload.image_url;
-    const res = id == undefined ? axiosClient.post("/surveys", payload) : axiosClient.put(`/surveys/${id}`, payload);
-      res.then((response) => {
+    const res =
+      id == undefined
+        ? axiosClient.post("/surveys", payload)
+        : axiosClient.put(`/surveys/${id}`, payload);
+    res
+      .then((response) => {
         console.log(response);
         navigate("/surveys");
+        if (id) {
+          showToast("You have successfully updated the survey.");
+        } else {
+          showToast("You have successfully created the survey.");
+        }
       })
       .catch((err) => {
         if (err && err.response) {

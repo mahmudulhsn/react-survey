@@ -9,6 +9,7 @@ import {
 import { NavLink, Navigate, Outlet } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider";
 import axiosClient from "../axios";
+import Toast from "../components/Toast";
 
 const navigation = [
   { name: "Dashboard", to: "/", current: true },
@@ -204,6 +205,8 @@ export default function DefaultLayout() {
         </Disclosure>
 
         <Outlet />
+
+        <Toast />
       </div>
     </>
   );
