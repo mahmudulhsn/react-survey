@@ -13,8 +13,15 @@ const Surveys = () => {
   const [loading, setLoading] = useState(false);
   const [meta, setMeta] = useState({});
 
-  const onDeleteClick = () => {
-    console.log("onDeleteClick");
+  const onDeleteClick = (id) => {
+    if (window.confirm("Are you sure you want to delete this survey?")) {
+      axiosClient
+        .delete(`/surveys/${id}`)
+        .then((res) => {
+          getSurveys();
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   const onPageClick = (link) => {
