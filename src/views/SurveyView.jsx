@@ -1,4 +1,4 @@
-import { PhotoIcon } from "@heroicons/react/24/outline";
+import { LinkIcon, PhotoIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -85,6 +85,10 @@ const SurveyView = () => {
     });
   }
 
+  function onDelete() {
+    console.log("delete");
+  }
+
   useEffect(() => {
     if (id) {
       setLoading(true);
@@ -102,7 +106,21 @@ const SurveyView = () => {
   }, []);
 
   return (
-    <PageComponent title={id ? "Update Survey" : "Create new Survey"}>
+    <PageComponent
+      title={id ? "Update Survey" : "Create new Survey"}
+      button={
+        <div className="flex gap-2">
+          <TButton color="green" href={`/surveys/public/${survey.slug}`}>
+            <LinkIcon className="h4 w-4 mr-2" />
+            Public Link
+          </TButton>
+          <TButton color="red" onClick={onDelete()}>
+            <TrashIcon className="h4 w-4 mr-2" />
+            Delete
+          </TButton>
+        </div>
+      }
+    >
       {loading && <div className="text-center text-lg">Loading...</div>}
 
       {!loading && (
